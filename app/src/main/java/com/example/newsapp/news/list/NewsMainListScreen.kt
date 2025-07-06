@@ -1,5 +1,6 @@
 package com.example.newsapp.news.list
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,41 +26,63 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.example.newsapp.news.models.Article
+import com.example.newsapp.utils.navigation.Screen
+
+object NewsMainListScreen : Screen("NewsMainListScreen")
 
 @Composable
 fun NewsMainListScreen(
-    viewModel: NewsMainListViewModel = hiltViewModel()
+    viewModel: NewsMainListViewModel = hiltViewModel(),
+    onArticleClicked: (Article) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.actions.collect { action ->
             when (action) {
-                is NewsUiAction.ShowError -> {
+                is NewsMainListViewAction.ShowError -> {
                     print("Ui action ShowError ${action.message}")
+                }
+                is NewsMainListViewAction.ShowArticleDetails -> {
+                    action.article
                 }
             }
         }
     }
 
-    Layout(state)
+    Layout(
+        state = state,
+        onArticleClicked = onArticleClicked
+    )
 }
 
 @Composable
-fun Layout(state: NewsUiState) {
+fun Layout(
+    state: NewsMainListViewState,
+    onArticleClicked: (Article) -> Unit
+) {
     LazyColumn {
         items(state.articles) { article ->
-            ArticleItem(article)
+            ArticleItem(
+                article = article,
+                onArticleClicked = { article ->
+                    onArticleClicked(article)
+                }
+            )
         }
     }
 }
 
 @Composable
-fun ArticleItem(articleResponse: Article) {
+fun ArticleItem(
+    article: Article,
+    onArticleClicked: (Article) -> Unit
+) {
     Card(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth()
+            .clickable { onArticleClicked(article) }
     ) {
         Row(
             modifier = Modifier
@@ -70,7 +93,7 @@ fun ArticleItem(articleResponse: Article) {
                 modifier = Modifier
                     .height(100.dp)
                     .width(130.dp),
-                model = articleResponse.urlToImage,
+                model = article.urlToImage,
                 contentDescription = "Top Headlines Image"
             )
 
@@ -78,21 +101,21 @@ fun ArticleItem(articleResponse: Article) {
                 modifier = Modifier.height(100.dp)
             ) {
                 Text(
-                    text = articleResponse.title,
+                    text = article.title,
                     style = MaterialTheme.typography.titleMedium
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = articleResponse.description,
+                    text = article.description,
                     style = MaterialTheme.typography.bodySmall
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = articleResponse.publishedAt.toString(),
+                    text = article.publishedAt.toString(),
                     style = MaterialTheme.typography.bodySmall
                 )
             }

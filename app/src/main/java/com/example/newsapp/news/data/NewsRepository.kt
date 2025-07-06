@@ -24,7 +24,7 @@ class NewsRepository @Inject constructor(
     private fun NewsResponse.mapNewsResponse(): News {
         return News(
             status = status.orEmpty(),
-            articles = articlesResponse.orEmpty().mapArticleResponse()
+            articles = articles.orEmpty().mapArticleResponse()
         )
     }
 

@@ -23,10 +23,10 @@ class NewsMainListViewModel @Inject constructor(
         private const val HARDCODED_CATEGORY = "business"
     }
 
-    private val _uiState = MutableStateFlow(NewsUiState())
-    val uiState: StateFlow<NewsUiState> = _uiState
+    private val _uiState = MutableStateFlow(NewsMainListViewState())
+    val uiState: StateFlow<NewsMainListViewState> = _uiState
 
-    private val _actions = Channel<NewsUiAction>(Channel.BUFFERED)
+    private val _actions = Channel<NewsMainListViewAction>(Channel.BUFFERED)
     val actions = _actions.receiveAsFlow()
 
     init {
@@ -42,18 +42,25 @@ class NewsMainListViewModel @Inject constructor(
                         )
                     },
                     onError = { error ->
-                        _actions.send(NewsUiAction.ShowError(error.message))
+                        _actions.send(NewsMainListViewAction.ShowError(error.message))
                     },
                 )
         }
     }
+
+     fun onArticleClicked(article: Article) {
+         viewModelScope.launch {
+             _actions.send(NewsMainListViewAction.ShowArticleDetails(article))
+         }
+    }
 }
 
-data class NewsUiState(
+data class NewsMainListViewState(
     val isLoading: Boolean = false,
     val articles: List<Article> = emptyList()
 )
 
-sealed class NewsUiAction {
-    data class ShowError(val message: String) : NewsUiAction()
+sealed class NewsMainListViewAction {
+    data class ShowError(val message: String) : NewsMainListViewAction()
+    data class ShowArticleDetails(val article: Article) : NewsMainListViewAction()
 }

@@ -21,9 +21,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.example.newsapp.news.details.NewsDetailsScreen
-import com.example.newsapp.news.list.NewsMainListScreen
-import com.example.newsapp.ui.theme.NewsAppTheme
+import com.example.newsapp.ui.news.details.NewsDetailsScreen
+import com.example.newsapp.ui.news.list.NewsMainListScreen
+import com.example.newsapp.ui.designsystem.NewsAppTheme
+import com.example.newsapp.ui.webview.WebViewScreen
 import com.example.newsapp.utils.navigation.Screen
 import com.example.newsapp.utils.navigation.navigateTo
 import com.example.newsapp.utils.navigation.screen
@@ -103,9 +104,15 @@ fun MainFlow(
                     urlToImage = navBackStackEntry.arguments?.getString("urlToImage").orEmpty(),
                     publishedAt = navBackStackEntry.arguments?.getString("publishedAt").orEmpty(),
                     onReadFullArticleClicked = { url ->
-                        navController.navigateTo(url)
+                        val route = Screen.WebViewScreen.createRoute(url)
+
+                        navController.navigateTo(route = route)
                     }
                 )
+            }
+
+            screen(Screen.WebViewScreen) { navBackStackEntry ->
+                WebViewScreen(url = navBackStackEntry.arguments?.getString("url").orEmpty())
             }
         }
     }

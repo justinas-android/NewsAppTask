@@ -1,7 +1,7 @@
-package com.example.newsapp.news.list.domain
+package com.example.newsapp.ui.news.list.domain
 
-import com.example.newsapp.news.data.NewsRepository
-import com.example.newsapp.news.models.News
+import com.example.newsapp.ui.news.data.NewsRepository
+import com.example.newsapp.ui.news.models.News
 import com.example.newsapp.utils.BaseResult
 import com.example.newsapp.utils.Interactor
 import kotlinx.coroutines.flow.Flow

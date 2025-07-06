@@ -14,6 +14,20 @@ sealed class Screen(
 
     open fun buildRoute(): String = baseRoute
 
+    object WebViewScreen : Screen(
+        baseRoute = "webViewScreen",
+        arguments = listOf(
+            navArgument("url") { type = NavType.StringType },
+        )
+    ) {
+        fun createRoute(url: String): String {
+            val encodedUrl = Uri.encode(url)
+            return "$baseRoute/$encodedUrl"
+        }
+
+        override fun buildRoute(): String = "$baseRoute/{url}"
+    }
+
     object NewsMainListScreen : Screen("newsMainListScreen")
 
     object NewsDetailsScreen : Screen(

@@ -1,10 +1,10 @@
-package com.example.newsapp.news.data
+package com.example.newsapp.ui.news.data
 
 import com.example.newsapp.api.ArticleResponse
 import com.example.newsapp.api.NewsResponse
 import com.example.newsapp.network.NewsService
-import com.example.newsapp.news.models.Article
-import com.example.newsapp.news.models.News
+import com.example.newsapp.ui.news.models.Article
+import com.example.newsapp.ui.news.models.News
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton

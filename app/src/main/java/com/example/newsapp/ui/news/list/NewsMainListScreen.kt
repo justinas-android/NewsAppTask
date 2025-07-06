@@ -1,4 +1,4 @@
-package com.example.newsapp.news.list
+package com.example.newsapp.ui.news.list
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
-import com.example.newsapp.news.models.Article
+import com.example.newsapp.ui.news.models.Article
 
 @Composable
 fun NewsMainListScreen(

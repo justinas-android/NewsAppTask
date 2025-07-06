@@ -1,4 +1,4 @@
-package com.example.newsapp.news.models
+package com.example.newsapp.ui.news.models
 
 import java.util.Date
 

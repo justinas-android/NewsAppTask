@@ -1,4 +1,4 @@
-package com.example.newsapp.news.details
+package com.example.newsapp.ui.news.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -1,9 +1,9 @@
-package com.example.newsapp.news.list
+package com.example.newsapp.ui.news.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.newsapp.news.list.domain.GetTopHeadlinesInteractor
-import com.example.newsapp.news.models.Article
+import com.example.newsapp.ui.news.list.domain.GetTopHeadlinesInteractor
+import com.example.newsapp.ui.news.models.Article
 import com.example.newsapp.utils.collectLatestResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel

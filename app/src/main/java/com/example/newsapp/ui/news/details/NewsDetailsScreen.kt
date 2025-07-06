@@ -1,4 +1,4 @@
-package com.example.newsapp.news.details
+package com.example.newsapp.ui.news.details
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

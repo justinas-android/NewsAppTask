@@ -52,8 +52,7 @@ data class NewsDetailsViewState(
     val description: String = "",
     val url: String = "",
     val urlToImage: String = "",
-    val publishedAt: String = "",
-    val isLoading: Boolean = false
+    val publishedAt: String = ""
 )
 
 sealed class NewsDetailsViewAction {

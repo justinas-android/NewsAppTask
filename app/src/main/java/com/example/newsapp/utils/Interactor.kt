@@ -2,7 +2,6 @@ package com.example.newsapp.utils
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
@@ -34,12 +33,11 @@ sealed class BaseResult<out Type> {
 
 val <T> BaseResult<T>.data: T? get() = (this as? BaseResult.Success)?.data
 
-val <T> BaseResult<T>.error: String? get() = (this as? BaseResult.Error)?.message
-
-suspend fun <T> Flow<BaseResult<T>>.collectLatestResult(
+suspend fun <T> Flow<BaseResult<T>>.collectResult(
     onError: suspend (BaseResult.Error) -> Unit = { },
+    finally: suspend () -> Unit = {},
     onSuccess: suspend (T) -> Unit = {}
-) = collectLatest { result ->
+) = collect { result ->
     when (result) {
         is BaseResult.Success -> {
             onSuccess(result.data)
@@ -48,4 +46,6 @@ suspend fun <T> Flow<BaseResult<T>>.collectLatestResult(
             onError.invoke(result)
         }
     }
+
+    finally()
 }

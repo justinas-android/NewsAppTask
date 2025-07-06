@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsapp.ui.news.list.domain.GetTopHeadlinesInteractor
 import com.example.newsapp.ui.news.models.Article
-import com.example.newsapp.utils.collectLatestResult
+import com.example.newsapp.utils.collectResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,12 +30,26 @@ class NewsMainListViewModel @Inject constructor(
     val actions = _actions.receiveAsFlow()
 
     init {
+        onLoad()
+    }
+
+    fun onRefresh() {
+        onLoad()
+    }
+
+    fun onArticleClicked(article: Article) {
+        viewModelScope.launch {
+            _actions.send(NewsMainListViewAction.ShowArticleDetails(article))
+        }
+    }
+
+    private fun onLoad() {
         viewModelScope.launch {
             getTopHeadlinesInteractor(
                 country = HARDCODED_COUNTRY,
                 category = HARDCODED_CATEGORY
             )
-                .collectLatestResult(
+                .collectResult(
                     onSuccess = { result ->
                         _uiState.value = _uiState.value.copy(
                             articles = result.articles
@@ -44,20 +58,17 @@ class NewsMainListViewModel @Inject constructor(
                     onError = { error ->
                         _actions.send(NewsMainListViewAction.ShowError(error.message))
                     },
+                    finally = {
+                        _uiState.value = _uiState.value.copy(isLoading = false)
+                    }
                 )
-        }
-    }
-
-    fun onArticleClicked(article: Article) {
-        viewModelScope.launch {
-            _actions.send(NewsMainListViewAction.ShowArticleDetails(article))
         }
     }
 }
 
 data class NewsMainListViewState(
-    val isLoading: Boolean = false,
-    val articles: List<Article> = emptyList()
+    val articles: List<Article> = emptyList(),
+    val isLoading: Boolean = true
 )
 
 sealed class NewsMainListViewAction {

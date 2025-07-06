@@ -12,12 +12,13 @@ fun NavGraphBuilder.screen(
 ) {
     composable(
         route = screen.route,
+        arguments = screen.arguments,
         content = content
     )
 }
 
-fun NavHostController.navigateTo(screen: Screen) {
-    if (currentDestination?.route != screen.route) {
-        navigate(screen.route)
+fun NavHostController.navigateTo(route: String) {
+    if (currentDestination?.route != route) {
+        navigate(route)
     }
 }

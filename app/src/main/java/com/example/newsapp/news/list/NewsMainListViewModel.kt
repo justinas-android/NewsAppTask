@@ -48,10 +48,10 @@ class NewsMainListViewModel @Inject constructor(
         }
     }
 
-     fun onArticleClicked(article: Article) {
-         viewModelScope.launch {
-             _actions.send(NewsMainListViewAction.ShowArticleDetails(article))
-         }
+    fun onArticleClicked(article: Article) {
+        viewModelScope.launch {
+            _actions.send(NewsMainListViewAction.ShowArticleDetails(article))
+        }
     }
 }
 

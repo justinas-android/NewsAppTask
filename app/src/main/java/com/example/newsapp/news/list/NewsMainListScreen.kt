@@ -26,9 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.example.newsapp.news.models.Article
-import com.example.newsapp.utils.navigation.Screen
-
-object NewsMainListScreen : Screen("NewsMainListScreen")
 
 @Composable
 fun NewsMainListScreen(
@@ -44,7 +41,7 @@ fun NewsMainListScreen(
                     print("Ui action ShowError ${action.message}")
                 }
                 is NewsMainListViewAction.ShowArticleDetails -> {
-                    action.article
+                    onArticleClicked(action.article)
                 }
             }
         }
@@ -52,7 +49,7 @@ fun NewsMainListScreen(
 
     Layout(
         state = state,
-        onArticleClicked = onArticleClicked
+        onArticleClicked = viewModel::onArticleClicked
     )
 }
 

@@ -24,6 +24,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.newsapp.news.details.NewsDetailsScreen
 import com.example.newsapp.news.list.NewsMainListScreen
 import com.example.newsapp.ui.theme.NewsAppTheme
+import com.example.newsapp.utils.navigation.Screen
 import com.example.newsapp.utils.navigation.navigateTo
 import com.example.newsapp.utils.navigation.screen
 import dagger.hilt.android.AndroidEntryPoint
@@ -72,18 +73,36 @@ fun MainFlow(
         NavHost(
             modifier = Modifier.padding(innerPadding),
             navController = navController,
-            startDestination = NewsMainListScreen.route
+            startDestination = Screen.NewsMainListScreen.route
         ) {
-            screen(NewsMainListScreen) {
+            screen(
+                screen = Screen.NewsMainListScreen
+            ) {
                 NewsMainListScreen(
-                    onArticleClicked = {
-                        navController.navigateTo(NewsDetailsScreen)
+                    onArticleClicked = { article ->
+                        val route = Screen.NewsDetailsScreen.createRoute(
+                            author = article.author,
+                            title = article.title,
+                            description = article.description,
+                            url = article.url,
+                            urlImage = article.urlToImage,
+                            publishedAt = article.publishedAt.toString()
+                        )
+
+                        navController.navigateTo(route = route)
                     }
                 )
             }
 
-            screen(NewsDetailsScreen) {
-                NewsDetailsScreen()
+            screen(Screen.NewsDetailsScreen) { navBackStackEntry ->
+                NewsDetailsScreen(
+                    author = navBackStackEntry.arguments?.getString("author").orEmpty(),
+                    title = navBackStackEntry.arguments?.getString("title").orEmpty(),
+                    description = navBackStackEntry.arguments?.getString("description").orEmpty(),
+                    url = navBackStackEntry.arguments?.getString("url").orEmpty(),
+                    urlToImage = navBackStackEntry.arguments?.getString("urlToImage").orEmpty(),
+                    publishedAt = navBackStackEntry.arguments?.getString("publishedAt").orEmpty()
+                )
             }
         }
     }

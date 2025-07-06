@@ -19,20 +19,22 @@ class NewsRepository @Inject constructor(
     ): News = service.getTopHeadlines(
         country = country,
         category = category
-    ).mapNewsResponse()
+    ).mapToNews()
 
-    private fun NewsResponse.mapNewsResponse(): News {
+    private fun NewsResponse.mapToNews(): News {
         return News(
             status = status.orEmpty(),
-            articles = articles.orEmpty().mapArticleResponse()
+            articles = articles.orEmpty().mapToArticles()
         )
     }
 
-    private fun List<ArticleResponse>.mapArticleResponse(): List<Article> {
+    private fun List<ArticleResponse>.mapToArticles(): List<Article> {
         return map { article ->
             Article(
                 title = article.title.orEmpty(),
+                author = article.author.orEmpty(),
                 description = article.description.orEmpty(),
+                url = article.url.orEmpty(),
                 urlToImage = article.urlToImage.orEmpty(),
                 publishedAt = article.publishedAt ?: Date()
             )

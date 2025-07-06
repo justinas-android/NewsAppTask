@@ -34,6 +34,7 @@ class NewsMainListViewModel @Inject constructor(
     }
 
     fun onRefresh() {
+        _uiState.value = _uiState.value.copy(isRefreshing = true)
         onLoad()
     }
 
@@ -59,7 +60,10 @@ class NewsMainListViewModel @Inject constructor(
                         _actions.send(NewsMainListViewAction.ShowError(error.message))
                     },
                     finally = {
-                        _uiState.value = _uiState.value.copy(isLoading = false)
+                        _uiState.value = _uiState.value.copy(
+                            isLoading = false,
+                            isRefreshing = false
+                        )
                     }
                 )
         }
@@ -68,7 +72,8 @@ class NewsMainListViewModel @Inject constructor(
 
 data class NewsMainListViewState(
     val articles: List<Article> = emptyList(),
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val isRefreshing: Boolean = true
 )
 
 sealed class NewsMainListViewAction {

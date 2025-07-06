@@ -11,8 +11,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,12 +27,14 @@ import coil3.compose.AsyncImage
 import com.example.newsapp.ui.designsystem.widgets.LoadingIndicator
 import com.example.newsapp.ui.news.models.Article
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewsMainListScreen(
     viewModel: NewsMainListViewModel = hiltViewModel(),
     onArticleClicked: (Article) -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val refreshState = rememberPullToRefreshState()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.actions.collect { action ->
@@ -48,10 +53,16 @@ fun NewsMainListScreen(
         LoadingIndicator()
     }
 
-    Layout(
-        state = state,
-        onArticleClicked = viewModel::onArticleClicked
-    )
+    PullToRefreshBox(
+        isRefreshing = state.isRefreshing,
+        onRefresh = { viewModel.onRefresh() },
+        state = refreshState
+    ) {
+        Layout(
+            state = state,
+            onArticleClicked = viewModel::onArticleClicked
+        )
+    }
 }
 
 @Composable

@@ -23,7 +23,7 @@ sealed class Screen(
             navArgument("title") { type = NavType.StringType },
             navArgument("description") { type = NavType.StringType },
             navArgument("url") { type = NavType.StringType },
-            navArgument("urlImage") { type = NavType.StringType },
+            navArgument("urlToImage") { type = NavType.StringType },
             navArgument("publishedAt") { type = NavType.StringType },
         )
     ) {
@@ -32,19 +32,19 @@ sealed class Screen(
             title: String,
             description: String,
             url: String,
-            urlImage: String,
+            urlToImage: String,
             publishedAt: String
         ): String {
             val encodedAuthor = Uri.encode(author)
             val encodedTitle = Uri.encode(title)
             val encodedDescription = Uri.encode(description)
             val encodedUrl = Uri.encode(url)
-            val encodedUrlImage = Uri.encode(urlImage)
+            val encodedUrlImage = Uri.encode(urlToImage)
             val encodedPublishedAt = Uri.encode(publishedAt)
 
             return "$baseRoute/$encodedAuthor/$encodedTitle/$encodedDescription/$encodedUrl/$encodedUrlImage/$encodedPublishedAt"
         }
 
-        override fun buildRoute(): String = "$baseRoute/{author}/{title}/{description}/{url}/{urlImage}/{publishedAt}"
+        override fun buildRoute(): String = "$baseRoute/{author}/{title}/{description}/{url}/{urlToImage}/{publishedAt}"
     }
 }

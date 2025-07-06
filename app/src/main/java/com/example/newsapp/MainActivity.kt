@@ -85,7 +85,7 @@ fun MainFlow(
                             title = article.title,
                             description = article.description,
                             url = article.url,
-                            urlImage = article.urlToImage,
+                            urlToImage = article.urlToImage,
                             publishedAt = article.publishedAt.toString()
                         )
 
@@ -101,7 +101,10 @@ fun MainFlow(
                     description = navBackStackEntry.arguments?.getString("description").orEmpty(),
                     url = navBackStackEntry.arguments?.getString("url").orEmpty(),
                     urlToImage = navBackStackEntry.arguments?.getString("urlToImage").orEmpty(),
-                    publishedAt = navBackStackEntry.arguments?.getString("publishedAt").orEmpty()
+                    publishedAt = navBackStackEntry.arguments?.getString("publishedAt").orEmpty(),
+                    onReadFullArticleClicked = { url ->
+                        navController.navigateTo(url)
+                    }
                 )
             }
         }

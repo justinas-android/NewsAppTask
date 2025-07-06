@@ -55,7 +55,7 @@ fun Layout(state: NewsUiState) {
 }
 
 @Composable
-fun ArticleItem(article: Article) {
+fun ArticleItem(articleResponse: Article) {
     Card(
         modifier = Modifier
             .padding(8.dp)
@@ -70,7 +70,7 @@ fun ArticleItem(article: Article) {
                 modifier = Modifier
                     .height(100.dp)
                     .width(130.dp),
-                model = article.urlToImage,
+                model = articleResponse.urlToImage,
                 contentDescription = "Top Headlines Image"
             )
 
@@ -78,21 +78,21 @@ fun ArticleItem(article: Article) {
                 modifier = Modifier.height(100.dp)
             ) {
                 Text(
-                    text = article.title ?: "",
+                    text = articleResponse.title,
                     style = MaterialTheme.typography.titleMedium
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = article.description ?: "",
+                    text = articleResponse.description,
                     style = MaterialTheme.typography.bodySmall
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = article.publishedAt?.time.toString(),
+                    text = articleResponse.publishedAt.toString(),
                     style = MaterialTheme.typography.bodySmall
                 )
             }

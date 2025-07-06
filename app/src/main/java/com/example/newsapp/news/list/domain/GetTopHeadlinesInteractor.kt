@@ -1,7 +1,7 @@
 package com.example.newsapp.news.list.domain
 
-import com.example.newsapp.api.NewsResponse
 import com.example.newsapp.news.data.NewsRepository
+import com.example.newsapp.news.models.News
 import com.example.newsapp.utils.BaseResult
 import com.example.newsapp.utils.Interactor
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +14,7 @@ class GetTopHeadlinesInteractor @Inject constructor(
     operator fun invoke(
         country: String,
         category: String
-    ): Flow<BaseResult<NewsResponse>> = wrapCoroutineFlowResult {
+    ): Flow<BaseResult<News>> = wrapCoroutineFlowResult {
         newsRepository.getTopHeadlines(
             country = country,
             category = category

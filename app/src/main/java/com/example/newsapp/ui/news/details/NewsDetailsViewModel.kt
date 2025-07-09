@@ -27,7 +27,7 @@ class NewsDetailsViewModel @Inject constructor(
         description: String,
         url: String,
         urlToImage: String,
-        publishedAt: String,
+        publishedAt: String
     ) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
@@ -44,7 +44,7 @@ class NewsDetailsViewModel @Inject constructor(
     fun onReadFullArticleClicked(url: String) {
         analyticsTracker.logEvent(
             category = "article_details",
-            action = "click__read_more",
+            action = "click_read_more",
             label = uiState.value.title
         )
         viewModelScope.launch {

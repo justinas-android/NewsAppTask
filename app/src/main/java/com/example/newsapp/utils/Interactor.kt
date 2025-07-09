@@ -39,6 +39,9 @@ sealed class BaseResult<out Type> {
 
 val <T> BaseResult<T>.data: T? get() = (this as? BaseResult.Success)?.data
 
+fun <T : Any> T.toFlowBaseResultSuccess(): Flow<BaseResult<T>> = BaseResult.Success(this).toFlow()
+fun <T : Any> String.toFlowBaseResultError(): Flow<BaseResult<T>> = BaseResult.Error(this).toFlow()
+
 suspend fun <T> Flow<BaseResult<T>>.collectResult(
     onError: suspend (BaseResult.Error) -> Unit = { },
     finally: suspend () -> Unit = {},

@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.hilt)
+    alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.google.services)
     id("kotlin-kapt")
 }
 
@@ -53,6 +55,9 @@ dependencies {
     implementation(libs.androidx.material3)
 
     implementation(libs.lifecycle.viewmodel.compose)
+
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
 
     // Retrofit & Moshi
     implementation(libs.retrofit)

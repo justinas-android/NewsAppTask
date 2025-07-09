@@ -1,5 +1,6 @@
 package com.example.newsapp.ui.news.list
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -35,12 +37,13 @@ fun NewsMainListScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val refreshState = rememberPullToRefreshState()
+    val context = LocalContext.current
 
     LaunchedEffect(key1 = Unit) {
         viewModel.actions.collect { action ->
             when (action) {
                 is NewsMainListViewAction.ShowError -> {
-                    print("Ui action ShowError ${action.message}")
+                    Toast.makeText(context, action.message, Toast.LENGTH_LONG).show()
                 }
                 is NewsMainListViewAction.ShowArticleDetails -> {
                     onArticleClicked(action.article)

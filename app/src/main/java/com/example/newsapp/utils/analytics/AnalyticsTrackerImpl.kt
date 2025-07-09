@@ -6,7 +6,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import javax.inject.Inject
 
 class AnalyticsTrackerImpl @Inject constructor(
-    private val analytics: FirebaseAnalytics
+    private val firebaseAnalytics: FirebaseAnalytics
 ) : AnalyticsTracker {
 
     companion object {
@@ -14,10 +14,22 @@ class AnalyticsTrackerImpl @Inject constructor(
         private const val ACTION = "action"
     }
 
-    override fun logEvent(category: String, action: String, label: String) {
+    override fun logEvent(
+        category: String,
+        action: String,
+        label: String
+    ) {
         synchronized(AnalyticsTracker::class.java) {
             logFirebaseAnalyticsEvent(category, action, label)
         }
+    }
+
+    override fun logScreen(screenName: String) {
+        val bundle = Bundle().apply {
+            putString(FirebaseAnalytics.Param.SCREEN_NAME, screenName)
+        }
+
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
     }
 
     private fun logFirebaseAnalyticsEvent(category: String, action: String, label: String) {
@@ -26,7 +38,7 @@ class AnalyticsTrackerImpl @Inject constructor(
             putString(LABEL, label)
         }
 
-        analytics.logEvent(category, bundle)
+        firebaseAnalytics.logEvent(category, bundle)
         Log.d("AnalyticsTracker", "$category: $bundle ")
     }
 }

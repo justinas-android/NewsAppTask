@@ -14,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,23 +22,28 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.example.newsapp.ui.designsystem.NewsAppTheme
 import com.example.newsapp.ui.news.details.NewsDetailsScreen
 import com.example.newsapp.ui.news.list.NewsMainListScreen
-import com.example.newsapp.ui.designsystem.NewsAppTheme
 import com.example.newsapp.ui.webview.WebViewScreen
+import com.example.newsapp.utils.analytics.AnalyticsTracker
 import com.example.newsapp.utils.navigation.Screen
 import com.example.newsapp.utils.navigation.navigateTo
 import com.example.newsapp.utils.navigation.screen
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject
+    lateinit var analyticsTracker: AnalyticsTracker
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             NewsAppTheme {
-                MainFlow()
+                MainFlow(analyticsTracker = analyticsTracker)
             }
         }
     }
@@ -46,6 +52,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainFlow(
     navController: NavHostController = rememberNavController(),
+    analyticsTracker: AnalyticsTracker
 ) {
     Scaffold(
         topBar = {
@@ -114,6 +121,18 @@ fun MainFlow(
             screen(Screen.WebViewScreen) { navBackStackEntry ->
                 WebViewScreen(url = navBackStackEntry.arguments?.getString("url").orEmpty())
             }
+        }
+    }
+
+    LaunchedEffect(navController) {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            val screenName = when (destination.route) {
+                Screen.NewsMainListScreen.route -> "NewsMainListScreen"
+                Screen.NewsDetailsScreen.route -> "NewsDetailsScreen"
+                Screen.WebViewScreen.route -> "WebViewScreen"
+                else -> "UnknownScreen"
+            }
+            analyticsTracker.logScreen(screenName)
         }
     }
 }

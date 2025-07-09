@@ -1,11 +1,17 @@
 package com.example.newsapp.utils
 
+import com.example.newsapp.utils.analytics.Crashlytics
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-open class Interactor {
+open class Interactor @Inject constructor() {
+
+    @Inject
+    lateinit var crashlytics: Crashlytics
+
     fun <T> wrapCoroutineFlowResult(
         coroutine: suspend () -> T
     ): Flow<BaseResult<T>> = try {
@@ -21,8 +27,8 @@ open class Interactor {
     }
 
     open suspend fun Throwable.getMessage(): String {
-//        crashlytics.logException(this)
-        return message ?: "Something went wrong"
+        crashlytics.logException(this)
+        return "Something went wrong"
     }
 }
 

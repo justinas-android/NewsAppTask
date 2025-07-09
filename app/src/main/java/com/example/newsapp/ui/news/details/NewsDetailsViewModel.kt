@@ -2,6 +2,7 @@ package com.example.newsapp.ui.news.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.newsapp.utils.analytics.AnalyticsTracker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,6 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NewsDetailsViewModel @Inject constructor(
+    private val analyticsTracker: AnalyticsTracker
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(NewsDetailsViewState())
     val uiState: StateFlow<NewsDetailsViewState> = _uiState
@@ -40,6 +42,11 @@ class NewsDetailsViewModel @Inject constructor(
     }
 
     fun onReadFullArticleClicked(url: String) {
+        analyticsTracker.logEvent(
+            category = "article_details",
+            action = "click__read_more",
+            label = uiState.value.title
+        )
         viewModelScope.launch {
             _actions.send(NewsDetailsViewAction.ShowFullArticle(url))
         }

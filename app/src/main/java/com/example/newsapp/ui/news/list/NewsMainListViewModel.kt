@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsapp.ui.news.list.domain.GetTopHeadlinesInteractor
 import com.example.newsapp.ui.news.models.Article
+import com.example.newsapp.utils.analytics.AnalyticsTracker
 import com.example.newsapp.utils.collectResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NewsMainListViewModel @Inject constructor(
-    private val getTopHeadlinesInteractor: GetTopHeadlinesInteractor
+    private val getTopHeadlinesInteractor: GetTopHeadlinesInteractor,
+    private val analyticsTracker: AnalyticsTracker
 ) : ViewModel() {
 
     companion object {
@@ -39,6 +41,11 @@ class NewsMainListViewModel @Inject constructor(
     }
 
     fun onArticleClicked(article: Article) {
+        analyticsTracker.logEvent(
+            category = "articles",
+            action = "click",
+            label = article.title
+        )
         viewModelScope.launch {
             _actions.send(NewsMainListViewAction.ShowArticleDetails(article))
         }

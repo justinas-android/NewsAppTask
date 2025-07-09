@@ -1,5 +1,6 @@
 package com.example.newsapp.ui.news.details
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -35,6 +37,7 @@ fun NewsDetailsScreen(
     onReadFullArticleClicked: (String) -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.onLoad(
@@ -51,7 +54,7 @@ fun NewsDetailsScreen(
         viewModel.actions.collect { action ->
             when (action) {
                 is NewsDetailsViewAction.ShowError -> {
-                    print("Ui action ShowError ${action.message}")
+                    Toast.makeText(context, action.message, Toast.LENGTH_LONG).show()
                 }
                 is NewsDetailsViewAction.ShowFullArticle -> {
                     onReadFullArticleClicked(url)

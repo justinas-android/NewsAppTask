@@ -72,14 +72,16 @@ private fun Layout(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        AsyncImage(
-            modifier = Modifier
-                .height(200.dp)
-                .fillMaxWidth(),
-            model = state.urlToImage,
-            contentScale = ContentScale.Crop,
-            contentDescription = "Top Headlines Image"
-        )
+        if (state.urlToImage.isNotEmpty()) {
+            AsyncImage(
+                modifier = Modifier
+                    .height(200.dp)
+                    .fillMaxWidth(),
+                model = state.urlToImage,
+                contentScale = ContentScale.Crop,
+                contentDescription = "Top Headlines Image"
+            )
+        }
 
         Content(
             author = state.author,

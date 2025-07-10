@@ -20,7 +20,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import java.util.Date
 
 class NewsMainListViewModelTest {
 
@@ -73,7 +72,7 @@ class NewsMainListViewModelTest {
             description = "fakeDescription",
             url = "fakeUrl",
             urlToImage = "fakeUrlToImage",
-            publishedAt = Date(),
+            publishedAt = "fakeDate"
         )
         val fakeData = News(status = "-1", articles = listOf(fakeArticle))
         every { getTopHeadlinesInteractor(any(), any()) } returns
@@ -87,11 +86,11 @@ class NewsMainListViewModelTest {
         val lastState = stateTest.values.last()
 
         assertThat(lastState.articles).hasSize(1)
-        assertThat(lastState.articles.first().author).isEqualTo("fakeAuthor")
-        assertThat(lastState.articles.first().title).isEqualTo("fakeTitle")
-        assertThat(lastState.articles.first().description).isEqualTo("fakeDescription")
-        assertThat(lastState.articles.first().url).isEqualTo("fakeUrl")
-        assertThat(lastState.articles.first().urlToImage).isEqualTo("fakeUrlToImage")
+        assertThat(lastState.articles.first().author).isEqualTo(fakeArticle.author)
+        assertThat(lastState.articles.first().title).isEqualTo(fakeArticle.title)
+        assertThat(lastState.articles.first().description).isEqualTo(fakeArticle.description)
+        assertThat(lastState.articles.first().url).isEqualTo(fakeArticle.url)
+        assertThat(lastState.articles.first().urlToImage).isEqualTo(fakeArticle.urlToImage)
         assertThat(lastState.articles.first().publishedAt).isEqualTo(fakeArticle.publishedAt)
     }
 
@@ -103,7 +102,7 @@ class NewsMainListViewModelTest {
             description = "fakeDescription",
             url = "fakeUrl",
             urlToImage = "fakeUrlToImage",
-            publishedAt = Date(),
+            publishedAt = "fakeDate"
         )
         val fakeData = News(status = "-1", articles = listOf(fakeArticle))
 
@@ -128,7 +127,7 @@ class NewsMainListViewModelTest {
             description = "fakeDescription",
             url = "fakeUrl",
             urlToImage = "fakeUrlToImage",
-            publishedAt = Date(),
+            publishedAt = "fakeDate"
         )
         val fakeData = News(status = "-1", articles = listOf(fakeArticle))
 
@@ -153,7 +152,7 @@ class NewsMainListViewModelTest {
             description = "fakeDescription",
             url = "fakeUrl",
             urlToImage = "fakeUrlToImage",
-            publishedAt = Date()
+            publishedAt = "fakeDate"
         )
         every { getTopHeadlinesInteractor(any(), any()) } returns "Error".toFlowBaseResultError()
         every { analyticsTracker.logEvent(any(), any(), any()) } returns Unit

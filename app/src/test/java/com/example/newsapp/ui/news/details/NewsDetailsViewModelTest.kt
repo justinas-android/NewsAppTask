@@ -1,6 +1,7 @@
 package com.example.newsapp.ui.news.details
 
 import com.example.newsapp.runFlowTest
+import com.example.newsapp.ui.news.models.Article
 import com.example.newsapp.utils.analytics.AnalyticsTracker
 import io.mockk.every
 import io.mockk.mockk
@@ -42,44 +43,46 @@ class NewsDetailsViewModelTest {
 
     @Test
     fun `onLoad sets selected article values`() = runFlowTest {
-        vm.onLoad(
+        val fakeArticle = Article(
             author = "fakeAuthor",
             title = "fakeTitle",
             description = "fakeDescription",
             url = "fakeUrl",
             urlToImage = "fakeUrlToImage",
-            publishedAt = "fakePublishedAt"
+            publishedAt = "fakeDate"
         )
+
+        vm.onLoad(fakeArticle)
 
         val stateTest = vm.uiState.test()
         delay(1000L)
 
         val lastState = stateTest.values.last()
 
-        assertThat(lastState.author).isEqualTo("fakeAuthor")
-        assertThat(lastState.title).isEqualTo("fakeTitle")
-        assertThat(lastState.description).isEqualTo("fakeDescription")
-        assertThat(lastState.url).isEqualTo("fakeUrl")
-        assertThat(lastState.urlToImage).isEqualTo("fakeUrlToImage")
-        assertThat(lastState.publishedAt).isEqualTo("fakePublishedAt")
+        assertThat(lastState.author).isEqualTo(fakeArticle.author)
+        assertThat(lastState.title).isEqualTo(fakeArticle.title)
+        assertThat(lastState.description).isEqualTo(fakeArticle.description)
+        assertThat(lastState.url).isEqualTo(fakeArticle.url)
+        assertThat(lastState.urlToImage).isEqualTo(fakeArticle.urlToImage)
+        assertThat(lastState.publishedAt).isEqualTo(fakeArticle.publishedAt)
     }
 
     @Test
     fun `onReadFullArticleClicked logs analytics event and emits ShowFullArticle action`() = runFlowTest {
-        val fakeUrl = "fakeUrl"
-        val fakeTitle = "fakeTitle"
         every { analyticsTracker.logEvent(any(), any(), any()) } returns Unit
 
-        vm.onLoad(
+        val fakeArticle = Article(
             author = "fakeAuthor",
-            title = fakeTitle,
+            title = "fakeTitle",
             description = "fakeDescription",
             url = "fakeUrl",
             urlToImage = "fakeUrlToImage",
-            publishedAt = "fakePublishedAt"
+            publishedAt = "fakeDate"
         )
+
+        vm.onLoad(fakeArticle)
         delay(1000L)
-        vm.onReadFullArticleClicked(fakeUrl)
+        vm.onReadFullArticleClicked(fakeArticle.url)
 
         val actionTest = vm.actions.test()
         delay(1000L)
@@ -88,11 +91,11 @@ class NewsDetailsViewModelTest {
             analyticsTracker.logEvent(
                 category = "article_details",
                 action = "click_read_more",
-                label = fakeTitle
+                label = fakeArticle.title
             )
         }
         assertThat(actionTest.values.last()).isEqualTo(
-            NewsDetailsViewAction.ShowFullArticle(fakeUrl)
+            NewsDetailsViewAction.ShowFullArticle(fakeArticle.url)
         )
     }
 }

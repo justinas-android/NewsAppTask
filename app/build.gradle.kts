@@ -60,6 +60,7 @@ dependencies {
 
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.messaging)
 
     // Retrofit & Moshi
     implementation(libs.retrofit)

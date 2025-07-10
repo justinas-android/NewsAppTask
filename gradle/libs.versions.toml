@@ -17,7 +17,7 @@ hiltNavigationCompose = "1.2.0"
 okhttp = "5.1.0"
 coil3 = "3.2.0"
 firebaseAnalytics = "22.5.0"
-#firebaseMessaging = "24.1.1"
+firebaseMessaging = "24.1.2"
 firebaseCrashlyticsPlugin = "3.0.4"
 firebaseCrashlytics = "19.4.4"
 googleServices = "4.4.3"
@@ -50,7 +50,7 @@ lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel
 
 firebase-analytics = { module = "com.google.firebase:firebase-analytics", version.ref = "firebaseAnalytics" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics", version.ref = "firebaseCrashlytics" }
-#firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebaseMessaging" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebaseMessaging" }
 
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit-converter = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofit" }

@@ -5,8 +5,8 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -48,7 +48,7 @@ fun WebViewScreen(url: String) {
         if (isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .size(64.dp)
                     .align(Alignment.Center)
                     .padding(4.dp)
             )

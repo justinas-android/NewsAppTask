@@ -80,7 +80,7 @@ class NewsMainListViewModel @Inject constructor(
 data class NewsMainListViewState(
     val articles: List<Article> = emptyList(),
     val isLoading: Boolean = true,
-    val isRefreshing: Boolean = true
+    val isRefreshing: Boolean = false
 )
 
 sealed class NewsMainListViewAction {

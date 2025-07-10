@@ -5,9 +5,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -43,7 +46,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             NewsAppTheme {
-                MainFlow(analyticsTracker = analyticsTracker)
+                MainFlow(
+                    analyticsTracker = analyticsTracker,
+                    onExit = { this@MainActivity.finish() }
+                )
             }
         }
     }
@@ -52,20 +58,23 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainFlow(
     navController: NavHostController = rememberNavController(),
-    analyticsTracker: AnalyticsTracker
+    analyticsTracker: AnalyticsTracker,
+    onExit: () -> Unit
 ) {
     Scaffold(
         topBar = {
             Row(
                 modifier = Modifier
-                    .height(48.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .height(64.dp)
+                    .padding(WindowInsets.statusBars.asPaddingValues()),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
+                    modifier = Modifier.align(Alignment.CenterVertically),
                     onClick = {
                         if (!navController.popBackStack()) {
-//                            onExitApp()
+                            onExit()
                         }
                     }
                 ) {

@@ -24,16 +24,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import com.example.newsapp.ui.news.models.Article
 
 @Composable
 fun NewsDetailsScreen(
     viewModel: NewsDetailsViewModel = hiltViewModel(),
-    author: String,
-    title: String,
-    description: String,
-    url: String,
-    urlToImage: String,
-    publishedAt: String,
+    article: Article,
     onReadFullArticleClicked: (String) -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -41,12 +37,7 @@ fun NewsDetailsScreen(
 
     LaunchedEffect(Unit) {
         viewModel.onLoad(
-            author = author,
-            title = title,
-            description = description,
-            url = url,
-            urlToImage = urlToImage,
-            publishedAt = publishedAt
+            article
         )
     }
 
@@ -57,7 +48,7 @@ fun NewsDetailsScreen(
                     Toast.makeText(context, action.message, Toast.LENGTH_LONG).show()
                 }
                 is NewsDetailsViewAction.ShowFullArticle -> {
-                    onReadFullArticleClicked(url)
+                    onReadFullArticleClicked(action.url)
                 }
             }
         }
@@ -65,7 +56,7 @@ fun NewsDetailsScreen(
 
     Layout(
         state = state,
-        onReadFullArticleClicked = {
+        onReadFullArticleClicked = { url ->
             viewModel.onReadFullArticleClicked(url)
         }
     )

@@ -28,12 +28,14 @@ import androidx.navigation.compose.rememberNavController
 import com.example.newsapp.ui.designsystem.NewsAppTheme
 import com.example.newsapp.ui.news.details.NewsDetailsScreen
 import com.example.newsapp.ui.news.list.NewsMainListScreen
+import com.example.newsapp.ui.news.models.Article
 import com.example.newsapp.ui.webview.WebViewScreen
 import com.example.newsapp.utils.analytics.AnalyticsTracker
 import com.example.newsapp.utils.navigation.Screen
 import com.example.newsapp.utils.navigation.navigateTo
 import com.example.newsapp.utils.navigation.screen
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -97,31 +99,20 @@ fun MainFlow(
             ) {
                 NewsMainListScreen(
                     onArticleClicked = { article ->
-                        val route = Screen.NewsDetailsScreen.createRoute(
-                            author = article.author,
-                            title = article.title,
-                            description = article.description,
-                            url = article.url,
-                            urlToImage = article.urlToImage,
-                            publishedAt = article.publishedAt.toString()
-                        )
-
+                        val route = Screen.NewsDetailsScreen.createRoute(article)
                         navController.navigateTo(route = route)
                     }
                 )
             }
 
             screen(Screen.NewsDetailsScreen) { navBackStackEntry ->
+                val json = navBackStackEntry.arguments?.getString("articleJson") ?: ""
+                val article = Json.decodeFromString<Article>(json)
+
                 NewsDetailsScreen(
-                    author = navBackStackEntry.arguments?.getString("author").orEmpty(),
-                    title = navBackStackEntry.arguments?.getString("title").orEmpty(),
-                    description = navBackStackEntry.arguments?.getString("description").orEmpty(),
-                    url = navBackStackEntry.arguments?.getString("url").orEmpty(),
-                    urlToImage = navBackStackEntry.arguments?.getString("urlToImage").orEmpty(),
-                    publishedAt = navBackStackEntry.arguments?.getString("publishedAt").orEmpty(),
+                    article = article,
                     onReadFullArticleClicked = { url ->
                         val route = Screen.WebViewScreen.createRoute(url)
-
                         navController.navigateTo(route = route)
                     }
                 )

@@ -4,6 +4,8 @@ import android.net.Uri
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.example.newsapp.ui.news.models.Article
+import kotlinx.serialization.json.Json
 
 sealed class Screen(
     val baseRoute: String,
@@ -33,32 +35,14 @@ sealed class Screen(
     object NewsDetailsScreen : Screen(
         baseRoute = "newsDetailsScreen",
         arguments = listOf(
-            navArgument("author") { type = NavType.StringType },
-            navArgument("title") { type = NavType.StringType },
-            navArgument("description") { type = NavType.StringType },
-            navArgument("url") { type = NavType.StringType },
-            navArgument("urlToImage") { type = NavType.StringType },
-            navArgument("publishedAt") { type = NavType.StringType },
+            navArgument("articleJson") { type = NavType.StringType }
         )
     ) {
-        fun createRoute(
-            author: String,
-            title: String,
-            description: String,
-            url: String,
-            urlToImage: String,
-            publishedAt: String
-        ): String {
-            val encodedAuthor = Uri.encode(author)
-            val encodedTitle = Uri.encode(title)
-            val encodedDescription = Uri.encode(description)
-            val encodedUrl = Uri.encode(url)
-            val encodedUrlImage = Uri.encode(urlToImage)
-            val encodedPublishedAt = Uri.encode(publishedAt)
-
-            return "$baseRoute/$encodedAuthor/$encodedTitle/$encodedDescription/$encodedUrl/$encodedUrlImage/$encodedPublishedAt"
+        fun createRoute(article: Article): String {
+            val json = Uri.encode(Json.encodeToString(article))
+            return "$baseRoute/$json"
         }
 
-        override fun buildRoute(): String = "$baseRoute/{author}/{title}/{description}/{url}/{urlToImage}/{publishedAt}"
+        override fun buildRoute(): String = "$baseRoute/{articleJson}"
     }
 }

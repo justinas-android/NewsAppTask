@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.google.hilt)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.kotlin.serialization)
     id("kotlin-kapt")
 }
 
@@ -71,6 +72,8 @@ dependencies {
 
     implementation(libs.coil3.compose)
     implementation(libs.coil3.network.okhttp)
+
+    implementation(libs.kotlinx.serialization.json)
 
     // Hilt
     implementation(libs.hilt)

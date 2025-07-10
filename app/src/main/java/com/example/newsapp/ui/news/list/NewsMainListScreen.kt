@@ -167,7 +167,7 @@ private fun ArticleCard(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = article.publishedAt.toString(),
+                    text = article.publishedAt,
                     style = MaterialTheme.typography.bodySmall
                 )
             }

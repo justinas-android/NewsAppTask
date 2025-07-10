@@ -2,6 +2,7 @@ package com.example.newsapp.ui.news.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.newsapp.ui.news.models.Article
 import com.example.newsapp.utils.analytics.AnalyticsTracker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -21,22 +22,15 @@ class NewsDetailsViewModel @Inject constructor(
     private val _actions = Channel<NewsDetailsViewAction>(Channel.BUFFERED)
     val actions = _actions.receiveAsFlow()
 
-    fun onLoad(
-        author: String,
-        title: String,
-        description: String,
-        url: String,
-        urlToImage: String,
-        publishedAt: String
-    ) {
+    fun onLoad(article: Article) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
-                author = author,
-                title = title,
-                description = description,
-                url = url,
-                urlToImage = urlToImage,
-                publishedAt = publishedAt
+                author = article.author,
+                title =  article.title,
+                description =  article.description,
+                url =  article.url,
+                urlToImage =  article.urlToImage,
+                publishedAt =  article.publishedAt
             )
         }
     }

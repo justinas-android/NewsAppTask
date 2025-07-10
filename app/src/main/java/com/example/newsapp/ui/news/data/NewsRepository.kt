@@ -5,7 +5,9 @@ import com.example.newsapp.api.NewsResponse
 import com.example.newsapp.network.NewsService
 import com.example.newsapp.ui.news.models.Article
 import com.example.newsapp.ui.news.models.News
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,8 +38,15 @@ class NewsRepository @Inject constructor(
                 description = article.description.orEmpty(),
                 url = article.url.orEmpty(),
                 urlToImage = article.urlToImage.orEmpty(),
-                publishedAt = article.publishedAt ?: Date()
+                publishedAt = article.publishedAt.toFormattedString()
             )
         }
+    }
+
+    private fun Date?.toFormattedString(): String {
+        return this?.let {
+            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+            sdf.format(it)
+        } ?: ""
     }
 }

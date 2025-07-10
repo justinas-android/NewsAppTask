@@ -1,30 +1,30 @@
-Created a Pull request for completed task feature/news-feed-impl
+# News App Task
 
-Whats done:
+Created a Pull Request for completed task: `Feature/news-feed-impl`
 
-General
-● Public git repo
-● Feature branches
-App
-● Error handling, displaying an error message on the screen
+## What's Done
 
- Mandatory Technologies to use:
-● MVVM
-● Jetpack Compose
-● Retrofit - network manager (https://square.github.io/retrofit/)
-● ImageLoader  Coil (https://github.com/coil-kt/coil)
-● Unit tests Mockk - helper for test writing (https://mockk.io/)
-● Moshi - JSON parsing.
+### General
+- Public Git repo
+- Feature branches
 
-Bonus points
-● StateFlow
-● Firebase crashlytics (https://firebase.google.com/docs/crashlytics)
-● Google Analytics for Firebase - Analytics for events, view times,...
-(https://firebase.google.com/docs/analytics/)
-● FCM - Firebase Cloud Messaging (https://firebase.google.com/docs/cloud-messaging/)
-● Coroutines - https://kotlinlang.org/docs/coroutines-overview.html
-● Hilt - Dependency Injection
-(https://developer.android.com/training/dependency-injection/hilt-android)
+### App
+- Error handling: displaying an error message on the screen
 
+### Mandatory Technologies Used
+- **MVVM**
+- **Jetpack Compose**
+- **Retrofit** – Network manager [Retrofit Docs](https://square.github.io/retrofit/)
+- **Coil** – Image loader [Coil GitHub](https://github.com/coil-kt/coil)
+- **Mockk** – Unit test helper [Mockk.io](https://mockk.io/)
+- **Moshi** – JSON parsing
+
+### Bonus Points
+- **StateFlow**
+- **Firebase Crashlytics** [Crashlytics Docs](https://firebase.google.com/docs/crashlytics)
+- **Google Analytics for Firebase** – Events, view times, etc. [Analytics Docs](https://firebase.google.com/docs/analytics/)
+- **FCM (Firebase Cloud Messaging)** [FCM Docs](https://firebase.google.com/docs/cloud-messaging/)
+- **Coroutines** – [Coroutines Overview](https://kotlinlang.org/docs/coroutines-overview.html)
+- **Hilt (Dependency Injection)** [Hilt Docs](https://developer.android.com/training/dependency-injection/hilt-android)
 
 

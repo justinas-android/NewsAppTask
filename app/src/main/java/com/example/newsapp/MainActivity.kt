@@ -1,47 +1,178 @@
 package com.example.newsapp
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.newsapp.ui.theme.NewsAppTheme
+import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import com.example.newsapp.ui.designsystem.NewsAppTheme
+import com.example.newsapp.ui.news.details.NewsDetailsScreen
+import com.example.newsapp.ui.news.list.NewsMainListScreen
+import com.example.newsapp.ui.news.models.Article
+import com.example.newsapp.ui.webview.WebViewScreen
+import com.example.newsapp.utils.analytics.AnalyticsTracker
+import com.example.newsapp.utils.navigation.Screen
+import com.example.newsapp.utils.navigation.navigateTo
+import com.example.newsapp.utils.navigation.screen
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.serialization.json.Json
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject
+    lateinit var analyticsTracker: AnalyticsTracker
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             NewsAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                RequestNotificationPermission()
+
+                MainFlow(
+                    analyticsTracker = analyticsTracker,
+                    onExit = { this@MainActivity.finish() }
+                )
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun MainFlow(
+    navController: NavHostController = rememberNavController(),
+    analyticsTracker: AnalyticsTracker,
+    onExit: () -> Unit
+) {
+    Scaffold(
+        topBar = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp)
+                    .padding(WindowInsets.statusBars.asPaddingValues()),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(
+                    modifier = Modifier.align(Alignment.CenterVertically),
+                    onClick = {
+                        if (!navController.popBackStack()) {
+                            onExit()
+                        }
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                        contentDescription = "Icon Back"
+                    )
+                }
+            }
+        },
+        bottomBar = {}
+    ) { innerPadding ->
+        NavHost(
+            modifier = Modifier.padding(innerPadding),
+            navController = navController,
+            startDestination = Screen.NewsMainListScreen.route
+        ) {
+            screen(
+                screen = Screen.NewsMainListScreen
+            ) {
+                NewsMainListScreen(
+                    onArticleClicked = { article ->
+                        val route = Screen.NewsDetailsScreen.createRoute(article)
+                        navController.navigateTo(route = route)
+                    }
+                )
+            }
+
+            screen(Screen.NewsDetailsScreen) { navBackStackEntry ->
+                val json = navBackStackEntry.arguments?.getString("articleJson") ?: ""
+                val article = Json.decodeFromString<Article>(json)
+
+                NewsDetailsScreen(
+                    article = article,
+                    onReadFullArticleClicked = { url ->
+                        val route = Screen.WebViewScreen.createRoute(url)
+                        navController.navigateTo(route = route)
+                    }
+                )
+            }
+
+            screen(Screen.WebViewScreen) { navBackStackEntry ->
+                WebViewScreen(url = navBackStackEntry.arguments?.getString("url").orEmpty())
+            }
+        }
+    }
+
+    LaunchedEffect(navController) {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            val screenName = when (destination.route) {
+                Screen.NewsMainListScreen.route -> "NewsMainListScreen"
+                Screen.NewsDetailsScreen.route -> "NewsDetailsScreen"
+                Screen.WebViewScreen.route -> "WebViewScreen"
+                else -> "UnknownScreen"
+            }
+            analyticsTracker.logScreen(screenName)
+        }
+    }
+}
+
+@Composable
+fun RequestNotificationPermission() {
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        Log.d("FCM", "Notification permission granted: $isGranted")
+    }
+
+    LaunchedEffect(Unit) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun HomePreview() {
     NewsAppTheme {
-        Greeting("Android")
+        NewsMainListScreen(onArticleClicked = {})
     }
 }
